@@ -26,6 +26,12 @@ no loose example notebooks at the repo root. The first example is
   `.venv\Scripts\python.exe -m streamlit run <topic>/<name>_app.py`. To smoke-test that an app
   boots without spending tokens, run it headless (`--server.headless true --server.port <port>`)
   and check `http://localhost:<port>/_stcore/health` returns 200.
+- A topic may also ship a **CLI runner** (`<topic>/run_url.py`) that takes a URL or local image
+  path and streams the analysis to the terminal — e.g.
+  `.venv\Scripts\python.exe vision/run_url.py <url-or-path>`. Like the app, it imports the shared
+  `_wildlife` module (Python puts the script's folder on `sys.path`, so no guard is needed). Note
+  every real run spends API tokens; compile-check with `py_compile` and exercise `--help` / the
+  bad-path error first.
 
 ## The shared example pattern
 

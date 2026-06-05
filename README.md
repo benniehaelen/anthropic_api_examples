@@ -29,11 +29,19 @@ notebook with Jupyter (or the VS Code notebook editor) and run the cells top to 
 | --- | --- |
 | [`vision/wildlife_id.ipynb`](vision/wildlife_id.ipynb) | Identify wildlife in a photo with Claude's vision capability — subject detection, species ID, look-alikes, habitat cues, a region estimate, and a 1-4 confidence rating. Also reads precise GPS coordinates from the photo's EXIF metadata when present and resolves them to a place name. Works with a public image URL or a local file. |
 | [`vision/wildlife_id_app.py`](vision/wildlife_id_app.py) | A Streamlit front end for the wildlife analysis above: paste an image URL or drag in a photo, watch the analysis stream in, and see the confidence rating as a color-coded badge plus a location card (EXIF GPS coordinates + place name when available, Claude's inferred region otherwise). |
+| [`vision/run_url.py`](vision/run_url.py) | A command-line runner for the same analysis: pass a URL or local image path, stream the result to your terminal, and print the location (EXIF GPS + place name, or a note that none is present). |
 
 Run the Streamlit app (from the repo root):
 
 ```powershell
 .venv\Scripts\python.exe -m streamlit run vision/wildlife_id_app.py
+```
+
+Or run a single image from the command line:
+
+```powershell
+.venv\Scripts\python.exe vision/run_url.py https://example.com/photo.jpg
+.venv\Scripts\python.exe vision/run_url.py my_photo.jpg --no-location
 ```
 
 Place names are resolved with the [OpenStreetMap Nominatim](https://nominatim.org/) service

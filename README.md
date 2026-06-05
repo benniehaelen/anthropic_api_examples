@@ -20,12 +20,11 @@ Each example loads the key from `.env` via `python-dotenv`, so you only configur
 
 ## Examples
 
-Examples are organized by topic under [`examples/`](examples/), one folder per Claude API
-capability. Open a notebook with Jupyter (or the VS Code notebook editor) and run the cells
-top to bottom.
+Examples are organized into top-level topic folders, one per Claude API capability. Open a
+notebook with Jupyter (or the VS Code notebook editor) and run the cells top to bottom.
 
 ### Vision
 
 | Example | Description |
 | --- | --- |
-| [`vision/wildlife_id.ipynb`](examples/vision/wildlife_id.ipynb) | Identify wildlife in a photo with Claude's vision capability — subject detection, species ID, look-alikes, habitat cues, and a 1-4 confidence rating. Works with a public image URL or a local file. |
+| [`vision/wildlife_id.ipynb`](vision/wildlife_id.ipynb) | Identify wildlife in a photo with Claude's vision capability — subject detection, species ID, look-alikes, habitat cues, and a 1-4 confidence rating. Works with a public image URL or a local file. |

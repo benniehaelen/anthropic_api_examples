@@ -5,11 +5,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this repo is
 
 A collection of **self-contained Anthropic API examples**, each demonstrating one capability of
-the Claude Messages API. Examples are Jupyter notebooks organized **by topic** under
-`examples/<topic>/`, one folder per capability (e.g. `vision/`, and future siblings like
-`tool-use/`, `prompt-caching/`, `extended-thinking/`). Every example lives under a topic folder
-— there are no loose notebooks directly in `examples/`. The first example is
-`examples/vision/wildlife_id.ipynb` (image analysis).
+the Claude Messages API. Examples are Jupyter notebooks organized **by topic** in top-level
+folders, one folder per capability (e.g. `vision/`, and future siblings like `tool-use/`,
+`prompt-caching/`, `extended-thinking/`). Every example lives under a topic folder — there are
+no loose example notebooks at the repo root. The first example is
+`vision/wildlife_id.ipynb` (image analysis).
 
 ## Environment & commands
 
@@ -39,9 +39,10 @@ inventing a new one:
 
 ## Conventions for new examples
 
-- Place each example at `examples/<topic>/<name>.ipynb` (no numeric prefix). Reuse an existing
-  topic folder when one fits; otherwise create a new topic folder named after the capability.
-  Add a row under the matching topic heading in `README.md` (create the heading if new).
+- Place each example at `<topic>/<name>.ipynb` (top-level topic folder, no numeric prefix).
+  Reuse an existing topic folder when one fits; otherwise create a new topic folder named after
+  the capability. Add a row under the matching topic heading in `README.md` (create the heading
+  if new).
 - Keep examples runnable with no local assets when possible — prefer public **image URLs**
   (e.g. public-domain NPS/government photos) over committing binary files, and document the
   source and license in a markdown cell.

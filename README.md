@@ -27,8 +27,8 @@ notebook with Jupyter (or the VS Code notebook editor) and run the cells top to 
 
 | Example | Description |
 | --- | --- |
-| [`vision/wildlife_id.ipynb`](vision/wildlife_id.ipynb) | Identify wildlife in a photo with Claude's vision capability — subject detection, species ID, look-alikes, habitat cues, and a 1-4 confidence rating. Works with a public image URL or a local file. |
-| [`vision/wildlife_id_app.py`](vision/wildlife_id_app.py) | A Streamlit front end for the wildlife analysis above: paste an image URL or drag in a photo, watch the analysis stream in, and see the confidence rating as a color-coded badge. |
+| [`vision/wildlife_id.ipynb`](vision/wildlife_id.ipynb) | Identify wildlife in a photo with Claude's vision capability — subject detection, species ID, look-alikes, habitat cues, a region estimate, and a 1-4 confidence rating. Also reads precise GPS coordinates from the photo's EXIF metadata when present. Works with a public image URL or a local file. |
+| [`vision/wildlife_id_app.py`](vision/wildlife_id_app.py) | A Streamlit front end for the wildlife analysis above: paste an image URL or drag in a photo, watch the analysis stream in, and see the confidence rating as a color-coded badge plus a location card (EXIF GPS when available, Claude's inferred region otherwise). |
 
 Run the Streamlit app (from the repo root):
 

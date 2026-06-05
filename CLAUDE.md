@@ -45,9 +45,17 @@ examples, reuse this convention rather than inventing a new one:
 When a notebook and its Streamlit app would otherwise duplicate the prompt or image helpers,
 that content lives in a single underscore-prefixed module beside them (e.g.
 `vision/_wildlife.py`) and **both import from it** — there is no duplicated prompt literal.
-`vision/_wildlife.py` exports `MODEL`, `PROMPT`, and the image-block builders
+`vision/_wildlife.py` exports `MODEL`, `PROMPT`, the image-block builders
 `url_image_block(url)`, `image_block(path, media_type)` (local file → base64), and
-`bytes_image_block(data, media_type)` (raw bytes, e.g. a Streamlit upload → base64).
+`bytes_image_block(data, media_type)` (raw bytes, e.g. a Streamlit upload → base64), plus the
+location helpers `fetch_image_bytes(url)` (download bytes so EXIF can be read locally) and
+`extract_gps(data)` (parse EXIF GPS → `{lat, lon, maps_url, ...}` or `None`).
+
+Location is handled two ways, deliberately separated: Claude **estimates** a region from the
+pixels (step 5 of `PROMPT`), while **precise** coordinates come only from EXIF metadata, which
+the API never exposes — so `extract_gps` reads the file's bytes directly. Most web images have
+EXIF stripped, so `None` is the expected common result. `extract_gps` uses Pillow and
+`fetch_image_bytes` uses httpx (both are direct dependencies in `requirements.txt`).
 
 Import notes:
 - The **notebook** can't rely on `__file__`, so its setup cell adds the module's folder to

@@ -5,6 +5,9 @@ A polished front end for the same analysis as `wildlife_id.ipynb`: paste a publi
 URL or drag in a photo, and Claude's vision capability returns a structured identification
 (subject detection, species ID, look-alikes, habitat cues) plus a 1-4 confidence rating.
 
+It also reports location two ways: precise GPS coordinates read from the photo's EXIF
+metadata when present, and Claude's region-level estimate inferred from the image regardless.
+
 Run it (Windows / PowerShell, from the repo root):
 
     .venv\\Scripts\\python.exe -m streamlit run vision/wildlife_id_app.py
@@ -21,7 +24,14 @@ from dotenv import load_dotenv
 
 # Shared building blocks (model, prompt, image helpers) live in _wildlife.py, kept in sync
 # with the notebook. Streamlit puts this script's folder on sys.path, so a plain import works.
-from _wildlife import MODEL, PROMPT, url_image_block, bytes_image_block
+from _wildlife import (
+    MODEL,
+    PROMPT,
+    bytes_image_block,
+    extract_gps,
+    fetch_image_bytes,
+    url_image_block,
+)
 
 load_dotenv()
 
@@ -103,6 +113,16 @@ st.markdown(
       .badge .dot { width: .62rem; height: .62rem; border-radius: 999px; }
       .badge .tier { color: #64748b; font-weight: 500; }
 
+      .loc-card { margin-top: .85rem; padding: .8rem .95rem; border: 1px solid #e2e8f0;
+        border-radius: 12px; background: #f8fafc; }
+      .loc-head { font-weight: 600; font-size: .9rem; color: #0f172a; }
+      .loc-src { color: #94a3b8; font-weight: 500; font-size: .72rem; text-transform: uppercase;
+        letter-spacing: .06em; margin-left: .35rem; }
+      .loc-coords { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .95rem;
+        color: #334155; margin: .35rem 0 .4rem; }
+      .loc-link { font-size: .85rem; font-weight: 600; color: #047857; text-decoration: none; }
+      .loc-link:hover { text-decoration: underline; }
+
       .meta { color: #94a3b8; font-size: .82rem; }
       .stButton > button { border-radius: 10px; font-weight: 600; padding: .55rem 1.4rem; }
     </style>
@@ -115,8 +135,9 @@ st.markdown(
     <div class="hero-eyebrow">Claude Vision · Messages API</div>
     <div class="hero-title">Wildlife Identification</div>
     <div class="hero-sub">Paste a public image URL or drop in a photo. Claude returns a
-    structured field-guide analysis — subject, species, look-alikes, habitat — with a calibrated
-    confidence rating.</div>
+    structured field-guide analysis — subject, species, look-alikes, habitat, and a
+    region estimate — with a calibrated confidence rating, plus exact GPS coordinates when the
+    photo carries them.</div>
     """,
     unsafe_allow_html=True,
 )
@@ -179,11 +200,36 @@ def render_badge(slot, rating):
     )
 
 
-def render_results(display, blocks, stream: bool, saved_text: str = None, saved_rating=None):
+def render_location(gps, attempted):
+    """Show EXIF GPS coordinates when present; otherwise point to Claude's inferred estimate."""
+    if gps:
+        altitude = f" · {gps['altitude_m']} m elev." if "altitude_m" in gps else ""
+        st.markdown(
+            f"""
+            <div class="loc-card">
+              <div class="loc-head">📍 Capture location
+                <span class="loc-src">from photo EXIF</span></div>
+              <div class="loc-coords">{gps['lat']}, {gps['lon']}{altitude}</div>
+              <a class="loc-link" href="{gps['maps_url']}" target="_blank">View on map ↗</a>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    elif attempted:
+        st.caption(
+            "📍 No GPS metadata in this image — see the geographic estimate in the analysis."
+        )
+
+
+def render_results(
+    display, blocks, stream: bool, gps=None, gps_attempted=False,
+    saved_text: str = None, saved_rating=None,
+):
     col_img, col_txt = st.columns([0.42, 0.58], gap="large")
     with col_img:
         st.image(display, use_container_width=True)
         badge_slot = st.empty()
+        render_location(gps, gps_attempted)
     with col_txt:
         st.markdown("#### Analysis")
         box = st.container(border=True)
@@ -199,12 +245,23 @@ def render_results(display, blocks, stream: bool, saved_text: str = None, saved_
 
 
 if analyze:
+    # Read the file's metadata for precise coordinates. For an upload we already hold the bytes;
+    # for a URL we fetch them once, purely to inspect EXIF (Claude fetches the image separately).
+    with st.spinner("Checking image metadata…"):
+        if source == "🔗 Image URL":
+            probe_bytes = fetch_image_bytes(url.strip())
+        else:
+            probe_bytes = data
+        gps = extract_gps(probe_bytes) if probe_bytes else None
     try:
-        text, rating = render_results(display_image, image_block, stream=True)
+        text, rating = render_results(
+            display_image, image_block, stream=True, gps=gps, gps_attempted=True,
+        )
         st.session_state["last"] = {
             "display": display_image,
             "text": text,
             "rating": rating,
+            "gps": gps,
         }
     except Exception as exc:  # noqa: BLE001 — surface any API/network error to the user
         st.error(f"Analysis failed: {exc}")
@@ -212,6 +269,7 @@ elif "last" in st.session_state:
     saved = st.session_state["last"]
     render_results(
         saved["display"], None, stream=False,
+        gps=saved.get("gps"), gps_attempted=True,
         saved_text=saved["text"], saved_rating=saved["rating"],
     )
 

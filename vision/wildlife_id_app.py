@@ -19,46 +19,14 @@ import streamlit as st
 from anthropic import Anthropic
 from dotenv import load_dotenv
 
+# Shared building blocks (model, prompt, image helpers) live in _wildlife.py, kept in sync
+# with the notebook. Streamlit puts this script's folder on sys.path, so a plain import works.
+from _wildlife import MODEL, PROMPT, url_image_block, bytes_image_block
+
 load_dotenv()
 
-MODEL = "claude-sonnet-4-5"
 MAX_TOKENS = 4000
 SUPPORTED_TYPES = ["jpg", "jpeg", "png", "gif", "webp"]
-
-PROMPT = """
-Analyze the attached wildlife photo with these specific steps. Identify only what the image
-actually supports, and say so plainly when a feature is obscured or ambiguous.
-
-1. Subject detection: Establish what is in the frame:
-   - How many animals are present and where they sit in the frame
-   - How much of each animal is visible (full body, head only, partially occluded)
-   - Overall image quality factors that affect identification (lighting, focus, distance)
-
-2. Identification: Name the animal as precisely as the image allows:
-   - The most likely common name, and the species (binomial name) if you are confident enough
-   - The specific visual features that drive the identification (coat color and pattern, ear
-     shape, snout, tail, leg markings, relative size, body proportions)
-
-3. Alternatives and confounders: Guard against overconfidence:
-   - List the most plausible look-alike species
-   - For each, name the feature in the photo that argues for or against it
-
-4. Habitat and context cues: Read the surroundings:
-   - Describe the environment, substrate, vegetation, and the animal's posture or behavior
-   - Note what these cues suggest about the setting or the animal's identity
-
-5. Identification Confidence Rating: Assign a rating from 1-4:
-   - Rating 1 (Tentative): Only a broad category is supportable (for example, "a canid");
-     key diagnostic features are obscured.
-   - Rating 2 (Plausible): A likely species, but strong look-alikes cannot be ruled out.
-   - Rating 3 (Confident): Species identification is well supported by multiple distinguishing
-     features.
-   - Rating 4 (Definitive): Unambiguous; diagnostic features are clearly visible and no
-     realistic alternative remains.
-
-For each item above (1-5), write one sentence summarizing your findings, with your final
-response being the numeric Identification Confidence Rating (1-4) with a brief justification.
-"""
 
 # label, dot color, soft background — keyed by the 1-4 rating
 RATING_META = {
@@ -75,20 +43,6 @@ RATING_META = {
 @st.cache_resource
 def get_client() -> Anthropic:
     return Anthropic()
-
-
-def url_image_block(url: str) -> dict:
-    return {"type": "image", "source": {"type": "url", "url": url}}
-
-
-def bytes_image_block(data: bytes, media_type: str) -> dict:
-    import base64
-
-    encoded = base64.standard_b64encode(data).decode("utf-8")
-    return {
-        "type": "image",
-        "source": {"type": "base64", "media_type": media_type, "data": encoded},
-    }
 
 
 def stream_analysis(image_block: dict):

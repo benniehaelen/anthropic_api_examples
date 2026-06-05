@@ -29,18 +29,32 @@ no loose example notebooks at the repo root. The first example is
 
 ## The shared example pattern
 
-Every notebook is expected to be self-contained but follows the same shape established by
-`wildlife_id.ipynb`. When adding or editing examples, reuse this convention rather than
-inventing a new one:
+Every notebook follows the same shape established by `wildlife_id.ipynb`. When adding or editing
+examples, reuse this convention rather than inventing a new one:
 
 - **Setup cell**: `load_dotenv()`, then `client = Anthropic()` and a `model` string
   (currently `claude-sonnet-4-5`).
 - **Helper cell**: small wrappers reused across examples — `add_user_message` /
   `add_assistant_message` (which accept either a raw value or an SDK `Message` and unwrap
   `.content`), `chat(messages, system=, temperature=, tools=, thinking=, ...)` that builds the
-  `client.messages.create(**params)` call, `text_from_message` to concatenate text blocks, and
-  `url_image_block` / `image_block` to build image content blocks from a URL or a local file.
-- The example-specific prompt and the API call come last, printing `text_from_message(response)`.
+  `client.messages.create(**params)` call, and `text_from_message` to concatenate text blocks.
+- The API call comes last, printing `text_from_message(response)`.
+
+### Shared per-topic module (`_wildlife.py` pattern)
+
+When a notebook and its Streamlit app would otherwise duplicate the prompt or image helpers,
+that content lives in a single underscore-prefixed module beside them (e.g.
+`vision/_wildlife.py`) and **both import from it** — there is no duplicated prompt literal.
+`vision/_wildlife.py` exports `MODEL`, `PROMPT`, and the image-block builders
+`url_image_block(url)`, `image_block(path, media_type)` (local file → base64), and
+`bytes_image_block(data, media_type)` (raw bytes, e.g. a Streamlit upload → base64).
+
+Import notes:
+- The **notebook** can't rely on `__file__`, so its setup cell adds the module's folder to
+  `sys.path` (trying both `.` and the topic folder) before `from _wildlife import ...`, so it
+  works whether the working directory is the topic folder or the repo root.
+- The **Streamlit app** needs no such guard — Streamlit puts the script's own folder on
+  `sys.path`, so a plain `from _wildlife import ...` resolves.
 
 ## Conventions for new examples
 
@@ -53,6 +67,7 @@ inventing a new one:
   source and license in a markdown cell.
 - Start each notebook with a markdown title cell describing the capability and noting the
   `ANTHROPIC_API_KEY` requirement.
-- A Streamlit companion app for an example reuses that example's prompt verbatim (keep them in
-  sync) and streams the response via `client.messages.stream`. Name it `<name>_app.py` next to
-  the notebook and add a row + run command under the same README topic heading.
+- A Streamlit companion app shares its prompt and image helpers with the notebook through the
+  per-topic `_wildlife.py`-style module (see "Shared per-topic module" above) rather than
+  copying them, and streams the response via `client.messages.stream`. Name it `<name>_app.py`
+  next to the notebook and add a row + run command under the same README topic heading.

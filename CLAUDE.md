@@ -21,6 +21,11 @@ no loose example notebooks at the repo root. The first example is
   `python-dotenv`; `.env.example` is the template. `.env` is gitignored.
 - There is **no test suite or linter** configured yet. Examples are validated by running the
   notebook cells (each API call costs tokens).
+- Some topics also ship a **Streamlit app** (`<topic>/<name>_app.py`) as an interactive front
+  end for the same analysis. Run one with
+  `.venv\Scripts\python.exe -m streamlit run <topic>/<name>_app.py`. To smoke-test that an app
+  boots without spending tokens, run it headless (`--server.headless true --server.port <port>`)
+  and check `http://localhost:<port>/_stcore/health` returns 200.
 
 ## The shared example pattern
 
@@ -48,3 +53,6 @@ inventing a new one:
   source and license in a markdown cell.
 - Start each notebook with a markdown title cell describing the capability and noting the
   `ANTHROPIC_API_KEY` requirement.
+- A Streamlit companion app for an example reuses that example's prompt verbatim (keep them in
+  sync) and streams the response via `client.messages.stream`. Name it `<name>_app.py` next to
+  the notebook and add a row + run command under the same README topic heading.

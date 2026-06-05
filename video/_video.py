@@ -59,10 +59,16 @@ def _encode_jpeg(frame, longest_side, quality):
 
 
 def sample_frames(path, every_sec=1.0, max_frames=20, longest_side=768, jpeg_quality=80):
-    """Sample frames from a video at a fixed interval.
+    """Sample frames so they cover the WHOLE clip, not just its first seconds.
 
-    Returns a list of (timestamp_seconds, jpeg_bytes), at most `max_frames` long. Reads frames
-    sequentially (reliable across codecs) and keeps one roughly every `every_sec` seconds.
+    Returns a list of (timestamp_seconds, jpeg_bytes), at most `max_frames` long.
+
+    - Short clips (duration <= max_frames * every_sec): one frame every `every_sec` seconds.
+    - Long clips: `max_frames` frames spread evenly across the entire duration, so a montage
+      that shows a different animal every few seconds is actually covered. This is the key to
+      not missing animals that appear later in the video.
+
+    Falls back to sequential interval sampling when the container doesn't report a frame count.
     """
     import cv2
 
@@ -71,20 +77,41 @@ def sample_frames(path, every_sec=1.0, max_frames=20, longest_side=768, jpeg_qua
         raise RuntimeError(f"could not open video: {path}")
 
     fps = capture.get(cv2.CAP_PROP_FPS) or 25.0
+    total = int(capture.get(cv2.CAP_PROP_FRAME_COUNT) or 0)
     interval = max(1, int(round(fps * every_sec)))
 
-    frames = []
-    index = 0
-    while len(frames) < max_frames:
+    def grab(index):
+        capture.set(cv2.CAP_PROP_POS_FRAMES, index)
         ok, frame = capture.read()
         if not ok:
-            break
-        if index % interval == 0:
-            timestamp = round(index / fps, 2)
-            frames.append((timestamp, _encode_jpeg(frame, longest_side, jpeg_quality)))
-        index += 1
-    capture.release()
+            return None
+        return round(index / fps, 2), _encode_jpeg(frame, longest_side, jpeg_quality)
 
+    frames = []
+    if total > 0:
+        if total <= interval * max_frames:
+            indices = list(range(0, total, interval))  # short clip: dense interval, full coverage
+        elif max_frames == 1:
+            indices = [total // 2]
+        else:
+            # Spread max_frames evenly from the first to the last frame.
+            indices = [round(i * (total - 1) / (max_frames - 1)) for i in range(max_frames)]
+        for index in indices:
+            got = grab(index)
+            if got is not None:
+                frames.append(got)
+    else:
+        # Unknown length: read sequentially and keep one every `interval` frames (covers the start).
+        index = 0
+        while len(frames) < max_frames:
+            ok, frame = capture.read()
+            if not ok:
+                break
+            if index % interval == 0:
+                frames.append((round(index / fps, 2), _encode_jpeg(frame, longest_side, jpeg_quality)))
+            index += 1
+
+    capture.release()
     if not frames:
         raise RuntimeError(f"no frames could be read from: {path}")
     return frames

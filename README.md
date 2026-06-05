@@ -64,4 +64,10 @@ Run a video from the command line (from the repo root):
 ```powershell
 .venv\Scripts\python.exe video/run_video.py clip.mp4
 .venv\Scripts\python.exe video/run_video.py https://example.com/clip.mp4 --every-sec 0.5 --max-frames 30
+.venv\Scripts\python.exe video/run_video.py clip.mp4 --longest-side 1280   # more frame detail, more tokens
 ```
+
+Frames are downscaled to `--longest-side` pixels (default 768) to control image-token cost.
+Raising it gives the model more detail, but it can't compensate for a subject that is small or
+occluded in the frame — for hard species IDs, cropping the animal before sending it is far more
+effective than raising global resolution.

@@ -39,6 +39,7 @@ def main():
     parser.add_argument("video", help="public video URL or path to a local video file")
     parser.add_argument("--every-sec", type=float, default=1.0, help="sample one frame every N seconds (default 1.0)")
     parser.add_argument("--max-frames", type=int, default=10, help="cap on frames sent to Claude (default 10)")
+    parser.add_argument("--longest-side", type=int, default=768, help="downscale frames to this many pixels on the longest side (default 768; higher = more detail and more tokens)")
     args = parser.parse_args()
 
     try:
@@ -60,8 +61,11 @@ def main():
             sys.exit(f"error: no such file: {source}  (and it is not an http(s) URL)")
 
     try:
-        frames = sample_frames(source, every_sec=args.every_sec, max_frames=args.max_frames)
-        print(f"Sampled {len(frames)} frames (every {args.every_sec}s) · model {MODEL}")
+        frames = sample_frames(
+            source, every_sec=args.every_sec, max_frames=args.max_frames,
+            longest_side=args.longest_side,
+        )
+        print(f"Sampled {len(frames)} frames (every {args.every_sec}s, {args.longest_side}px) · model {MODEL}")
         print(f"Analyzing frames t={frames[0][0]:.1f}s … t={frames[-1][0]:.1f}s …\n")
 
         result = analyze_frames(client, frames)

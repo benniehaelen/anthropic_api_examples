@@ -38,7 +38,7 @@ def main():
     parser = argparse.ArgumentParser(description="Identify animals in a short video with Claude.")
     parser.add_argument("video", help="public video URL or path to a local video file")
     parser.add_argument("--every-sec", type=float, default=1.0, help="sample one frame every N seconds (default 1.0)")
-    parser.add_argument("--max-frames", type=int, default=20, help="cap on frames sent to Claude (default 20)")
+    parser.add_argument("--max-frames", type=int, default=10, help="cap on frames sent to Claude (default 10)")
     args = parser.parse_args()
 
     try:

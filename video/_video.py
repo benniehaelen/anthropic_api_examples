@@ -109,6 +109,14 @@ def frames_to_content(frames):
     return content
 
 
+# A descriptive User-Agent. Some hosts (e.g. Wikimedia) return 403 for the default httpx
+# agent, so identify the tool per their usage policies.
+USER_AGENT = (
+    "anthropic-api-examples/video "
+    "(https://github.com/benniehaelen/anthropic_api_examples)"
+)
+
+
 def fetch_video_to_temp(url, timeout=60):
     """Download a video URL to a temporary file and return its path (OpenCV needs a real path)."""
     import os
@@ -119,10 +127,18 @@ def fetch_video_to_temp(url, timeout=60):
     suffix = os.path.splitext(url.split("?")[0])[1] or ".mp4"
     handle = tempfile.NamedTemporaryFile(suffix=suffix, delete=False)
     try:
-        with httpx.stream("GET", url, timeout=timeout, follow_redirects=True) as resp:
+        with httpx.stream(
+            "GET", url, timeout=timeout, follow_redirects=True,
+            headers={"User-Agent": USER_AGENT},
+        ) as resp:
             resp.raise_for_status()
             for chunk in resp.iter_bytes():
                 handle.write(chunk)
+    except Exception:
+        handle.close()
+        if os.path.exists(handle.name):
+            os.remove(handle.name)
+        raise
     finally:
         handle.close()
     return handle.name

@@ -98,8 +98,16 @@ def fetch_image_bytes(url, timeout=30):
     """
     import httpx
 
+    # Some hosts (e.g. Wikimedia) reject httpx's default User-Agent with a 403, so identify
+    # the tool per their usage policies.
+    headers = {
+        "User-Agent": (
+            "anthropic-api-examples/wildlife-id "
+            "(https://github.com/benniehaelen/anthropic_api_examples)"
+        )
+    }
     try:
-        resp = httpx.get(url, timeout=timeout, follow_redirects=True)
+        resp = httpx.get(url, timeout=timeout, follow_redirects=True, headers=headers)
         resp.raise_for_status()
         return resp.content
     except Exception:

@@ -76,6 +76,14 @@ Import notes:
 - The **Streamlit app** needs no such guard — Streamlit puts the script's own folder on
   `sys.path`, so a plain `from _wildlife import ...` resolves.
 
+**Layout decision (keep helpers flat).** Topic helper modules stay directly in the topic folder
+(`vision/_wildlife.py`), *not* in a `helpers/`/`lib/` sub-folder. Colocation keeps imports
+trivial and avoids extra `sys.path` handling in notebooks. Do not introduce sub-folders for
+helpers at this scale. The generic Anthropic scaffolding (`add_user_message`, `chat`,
+`text_from_message`, streaming) is currently copied per consumer; only when a **second topic**
+actually needs it should it be lifted into a single top-level shared module — avoid that
+abstraction until there is a real second consumer.
+
 ## Conventions for new examples
 
 - Place each example at `<topic>/<name>.ipynb` (top-level topic folder, no numeric prefix).

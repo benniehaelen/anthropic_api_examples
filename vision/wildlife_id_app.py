@@ -30,6 +30,7 @@ from _wildlife import (
     bytes_image_block,
     extract_gps,
     fetch_image_bytes,
+    reverse_geocode,
     url_image_block,
 )
 
@@ -118,10 +119,12 @@ st.markdown(
       .loc-head { font-weight: 600; font-size: .9rem; color: #0f172a; }
       .loc-src { color: #94a3b8; font-weight: 500; font-size: .72rem; text-transform: uppercase;
         letter-spacing: .06em; margin-left: .35rem; }
-      .loc-coords { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .95rem;
-        color: #334155; margin: .35rem 0 .4rem; }
+      .loc-place { font-size: .9rem; font-weight: 500; color: #334155; margin-top: .2rem; }
+      .loc-coords { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92rem;
+        color: #64748b; margin: .3rem 0 .4rem; }
       .loc-link { font-size: .85rem; font-weight: 600; color: #047857; text-decoration: none; }
       .loc-link:hover { text-decoration: underline; }
+      .loc-attr { color: #b8c0cc; font-size: .68rem; margin-top: .5rem; }
 
       .meta { color: #94a3b8; font-size: .82rem; }
       .stButton > button { border-radius: 10px; font-weight: 600; padding: .55rem 1.4rem; }
@@ -204,13 +207,22 @@ def render_location(gps, attempted):
     """Show EXIF GPS coordinates when present; otherwise point to Claude's inferred estimate."""
     if gps:
         altitude = f" · {gps['altitude_m']} m elev." if "altitude_m" in gps else ""
+        place = gps.get("place")
+        place_html = f'<div class="loc-place">{place}</div>' if place else ""
+        attribution = (
+            '<div class="loc-attr">Place name © OpenStreetMap contributors</div>'
+            if place
+            else ""
+        )
         st.markdown(
             f"""
             <div class="loc-card">
               <div class="loc-head">📍 Capture location
                 <span class="loc-src">from photo EXIF</span></div>
+              {place_html}
               <div class="loc-coords">{gps['lat']}, {gps['lon']}{altitude}</div>
               <a class="loc-link" href="{gps['maps_url']}" target="_blank">View on map ↗</a>
+              {attribution}
             </div>
             """,
             unsafe_allow_html=True,
@@ -253,6 +265,8 @@ if analyze:
         else:
             probe_bytes = data
         gps = extract_gps(probe_bytes) if probe_bytes else None
+        if gps:
+            gps["place"] = reverse_geocode(gps["lat"], gps["lon"])
     try:
         text, rating = render_results(
             display_image, image_block, stream=True, gps=gps, gps_attempted=True,

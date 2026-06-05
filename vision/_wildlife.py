@@ -154,3 +154,35 @@ def extract_gps(data):
             pass
 
     return result
+
+
+# Nominatim asks every caller to send a descriptive User-Agent and to stay under ~1 request/
+# second. That is fine for interactive use here; a high-volume app should run its own instance
+# or use a paid geocoder. Results are © OpenStreetMap contributors.
+NOMINATIM_URL = "https://nominatim.openstreetmap.org/reverse"
+NOMINATIM_USER_AGENT = (
+    "anthropic-api-examples/wildlife-id "
+    "(https://github.com/benniehaelen/anthropic_api_examples)"
+)
+
+
+def reverse_geocode(lat, lon, timeout=10):
+    """Resolve coordinates to a human-readable place name via OpenStreetMap Nominatim.
+
+    Returns the display-name string (e.g. "Cedar Breaks National Monument, Utah, United
+    States"), or None on any failure. `zoom=10` keeps the result around city/area level rather
+    than a precise street address.
+    """
+    import httpx
+
+    try:
+        resp = httpx.get(
+            NOMINATIM_URL,
+            params={"lat": lat, "lon": lon, "format": "jsonv2", "zoom": 10},
+            headers={"User-Agent": NOMINATIM_USER_AGENT},
+            timeout=timeout,
+        )
+        resp.raise_for_status()
+        return resp.json().get("display_name") or None
+    except Exception:
+        return None

@@ -48,14 +48,20 @@ that content lives in a single underscore-prefixed module beside them (e.g.
 `vision/_wildlife.py` exports `MODEL`, `PROMPT`, the image-block builders
 `url_image_block(url)`, `image_block(path, media_type)` (local file → base64), and
 `bytes_image_block(data, media_type)` (raw bytes, e.g. a Streamlit upload → base64), plus the
-location helpers `fetch_image_bytes(url)` (download bytes so EXIF can be read locally) and
-`extract_gps(data)` (parse EXIF GPS → `{lat, lon, maps_url, ...}` or `None`).
+location helpers `fetch_image_bytes(url)` (download bytes so EXIF can be read locally),
+`extract_gps(data)` (parse EXIF GPS → `{lat, lon, maps_url, ...}` or `None`), and
+`reverse_geocode(lat, lon)` (coordinates → place-name string via OpenStreetMap Nominatim, or
+`None`).
 
 Location is handled two ways, deliberately separated: Claude **estimates** a region from the
 pixels (step 5 of `PROMPT`), while **precise** coordinates come only from EXIF metadata, which
-the API never exposes — so `extract_gps` reads the file's bytes directly. Most web images have
-EXIF stripped, so `None` is the expected common result. `extract_gps` uses Pillow and
-`fetch_image_bytes` uses httpx (both are direct dependencies in `requirements.txt`).
+the API never exposes — so `extract_gps` reads the file's bytes directly, and `reverse_geocode`
+turns them into a place name. Most web images have EXIF stripped, so `None` is the expected
+common result. `extract_gps` uses Pillow; `fetch_image_bytes` and `reverse_geocode` use httpx
+(both direct dependencies in `requirements.txt`). `reverse_geocode` calls the public Nominatim
+service — it sends a descriptive `User-Agent` per their policy (~1 req/sec), needs no API key,
+and results are © OpenStreetMap contributors (surface that attribution wherever a place name is
+shown).
 
 Import notes:
 - The **notebook** can't rely on `__file__`, so its setup cell adds the module's folder to

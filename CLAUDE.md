@@ -5,11 +5,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this repo is
 
 A collection of **self-contained Anthropic API examples**, each demonstrating one capability of
-the Claude Messages API. Examples are Jupyter notebooks organized **by topic** in top-level
-folders, one folder per capability (e.g. `vision/`, and future siblings like `tool-use/`,
-`prompt-caching/`, `extended-thinking/`). Every example lives under a topic folder — there are
-no loose example notebooks at the repo root. The first example is
-`vision/wildlife_id.ipynb` (image analysis).
+the Claude Messages API. Examples are Jupyter notebooks (often with a companion Streamlit app
+and/or CLI runner) organized **by topic** in top-level folders, one folder per capability —
+currently `vision/` (image analysis) and `video/` (animal recognition in video), with future
+siblings like `tool-use/` or `prompt-caching/`. Every example lives under a topic folder; there
+are no loose example notebooks at the repo root.
+
+Note on video: the Claude API has **no native video input** — it takes images. The `video/`
+topic therefore decodes a clip into sampled, timestamp-labeled frames (OpenCV), sends them as one
+ordered image sequence, asks for **strict JSON** per frame, and collapses that into a per-species
+timeline in plain Python. The same per-topic shared-module convention applies (`video/_video.py`,
+analogous to `vision/_wildlife.py`).
 
 ## Environment & commands
 

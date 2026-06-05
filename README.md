@@ -47,3 +47,21 @@ Or run a single image from the command line:
 Place names are resolved with the [OpenStreetMap Nominatim](https://nominatim.org/) service
 (no API key required) and are © OpenStreetMap contributors. Nominatim asks callers to stay
 under ~1 request/second; for heavy use, run your own instance or a paid geocoder.
+
+### Video
+
+The Claude API takes images, not video — so these examples decode a clip into sampled,
+timestamp-labeled frames, analyze them as one sequence, and report a per-species timeline.
+Frame decoding uses OpenCV.
+
+| Example | Description |
+| --- | --- |
+| [`video/animal_video_id.ipynb`](video/animal_video_id.ipynb) | Identify animals across a short video: sample frames at a fixed interval, send them to Claude as one ordered sequence, and collapse the per-frame JSON into a per-species timeline (first/last seen, frames, max count). |
+| [`video/run_video.py`](video/run_video.py) | A command-line runner for the same analysis: pass a video URL or local path, and print the summary plus the per-species timeline. |
+
+Run a video from the command line (from the repo root):
+
+```powershell
+.venv\Scripts\python.exe video/run_video.py clip.mp4
+.venv\Scripts\python.exe video/run_video.py https://example.com/clip.mp4 --every-sec 0.5 --max-frames 30
+```

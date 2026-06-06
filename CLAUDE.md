@@ -10,9 +10,16 @@ and/or CLI runner) organized **by topic** in top-level folders, one folder per c
 currently `vision/` (image analysis), `video/` (animal recognition in video), `citations/`
 (grounded answers with source citations), `documents/` (retrieval-augmented search over a
 mixed-format document library), `code_execution/` (Claude writes and runs code in a sandbox), and
-`prompt_caching/` (reuse a cached prefix; measure the savings), with future siblings like
-`tool-use/`. Every example lives under a topic folder; there are no loose example notebooks at the
-repo root.
+`prompt_caching/` (reuse a cached prefix; measure the savings), and `tool_use/` (custom client
+tools + the agentic loop). Every example lives under a topic folder; there are no loose example
+notebooks at the repo root.
+
+Note on tool use: `tool_use/_tool_use.py` defines two self-contained client tools (a safe
+`calculator` and a mock `get_weather`), their JSON schemas, an `execute_tool` dispatcher (errors
+are returned with `is_error`, not raised), and a manual agentic loop (`run_loop`) that records a
+step transcript for the app/CLI. The notebook additionally shows the SDK tool runner
+(`@beta_tool` + `client.beta.messages.tool_runner`). Contrast with `code_execution/` (server
+tool, no client loop). Uses `claude-sonnet-4-5`.
 
 Note on prompt caching: the `prompt_caching/` topic builds a large cacheable prefix (a generated
 handbook + system prompt + a tool), runs questions with `cache_control` on/off, and reports the

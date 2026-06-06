@@ -37,6 +37,7 @@ exercises, and self-check questions:
 [documents](documents/LEARN.md) ·
 [code execution](code_execution/LEARN.md) ·
 [prompt caching](prompt_caching/LEARN.md) ·
+[tool use](tool_use/LEARN.md) ·
 [video](video/LEARN.md).
 
 The study material is an unofficial community aid — confirm exam scope against the official guide
@@ -177,4 +178,23 @@ savings via the `usage` fields — and show the classic "silent invalidator" tha
 ```powershell
 .venv\Scripts\python.exe -m streamlit run prompt_caching/cache_app.py
 .venv\Scripts\python.exe prompt_caching/run_cache.py --compare
+```
+
+### Tool use
+
+Custom (client) tools: you declare tools, Claude decides when to call them, **you** run them and
+feed results back in a loop. The opposite of the code-execution *server* tool. Shows the manual
+agentic loop, the SDK tool runner, `tool_choice`, and `is_error` recovery.
+
+📚 Study sheet: [`tool_use/LEARN.md`](tool_use/LEARN.md)
+
+| Example | Description |
+| --- | --- |
+| [`tool_use/tool_use.ipynb`](tool_use/tool_use.ipynb) | A single tool call by hand, the manual agentic loop over two tools (calculator + weather), the automatic `@beta_tool` tool runner, and `tool_choice` / error handling. |
+| [`tool_use/agent_app.py`](tool_use/agent_app.py) | A Streamlit agent: ask a question and watch the loop — each tool call, its result, and the final answer. |
+| [`tool_use/run_agent.py`](tool_use/run_agent.py) | A command-line agent that prints the transcript and final answer. |
+
+```powershell
+.venv\Scripts\python.exe -m streamlit run tool_use/agent_app.py
+.venv\Scripts\python.exe tool_use/run_agent.py -q "Weather in Tokyo, and 100 - 32?"
 ```

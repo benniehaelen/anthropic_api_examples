@@ -46,6 +46,15 @@ Suggested order (builds from fundamentals to reliability):
 7. [`code_execution/LEARN.md`](code_execution/LEARN.md) — server tools, the Files API, agent primitives
 8. [`video/LEARN.md`](video/LEARN.md) — working within model constraints (no native video), cost/coverage trade-offs
 
+## Reference & practice
+
+- [**PRACTICE_EXAM.md**](PRACTICE_EXAM.md) — scenario-based questions with collapsible answers and
+  explanations, tagged by domain. Self-test before the real thing.
+- [**FEATURE_GUIDE.md**](FEATURE_GUIDE.md) — decision tables for "when do I reach for X" (the
+  judgment the exam rewards).
+- [**GLOSSARY.md**](GLOSSARY.md) — key terms, each linked to the topic that demonstrates it.
+- [**CHEATSHEET.md**](CHEATSHEET.md) — the limits, costs, and defaults this repo relies on.
+
 ## Cross-cutting themes the exam loves
 
 These show up across domains and across this repo — know them cold:

@@ -41,6 +41,10 @@ exercises, and self-check questions:
 [structured outputs](structured_outputs/LEARN.md) ·
 [video](video/LEARN.md).
 
+Plus repo-wide references: a [**PRACTICE_EXAM**](PRACTICE_EXAM.md) (scenario questions with
+answers), a [**FEATURE_GUIDE**](FEATURE_GUIDE.md) (when to reach for what), a
+[**GLOSSARY**](GLOSSARY.md), and a [**CHEATSHEET**](CHEATSHEET.md) (limits, costs, defaults).
+
 The study material is an unofficial community aid — confirm exam scope against the official guide
 on [Anthropic's training platform](https://anthropic.skilljar.com/).
 

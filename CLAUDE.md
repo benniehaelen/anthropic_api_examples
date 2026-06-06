@@ -10,9 +10,16 @@ and/or CLI runner) organized **by topic** in top-level folders, one folder per c
 currently `vision/` (image analysis), `video/` (animal recognition in video), `citations/`
 (grounded answers with source citations), `documents/` (retrieval-augmented search over a
 mixed-format document library), `code_execution/` (Claude writes and runs code in a sandbox), and
-`prompt_caching/` (reuse a cached prefix; measure the savings), and `tool_use/` (custom client
-tools + the agentic loop). Every example lives under a topic folder; there are no loose example
-notebooks at the repo root.
+`prompt_caching/` (reuse a cached prefix; measure the savings), `tool_use/` (custom client tools +
+the agentic loop), and `structured_outputs/` (schema-valid data via `messages.parse`). Every
+example lives under a topic folder; there are no loose example notebooks at the repo root.
+
+Note on structured outputs: `structured_outputs/_structured_outputs.py` extracts a Pydantic
+`SightingReport` from free-text notes via `client.messages.parse(output_format=...)` →
+`response.parsed_output`. It also shows the raw `output_config.format` JSON-schema path (strict
+mode rejects numeric `minimum`/`maximum` — use `enum`; require `additionalProperties: false`) and
+`strict: True` tools. Reminder: structured outputs and citations are mutually incompatible (400).
+Uses `claude-sonnet-4-5`.
 
 Note on tool use: `tool_use/_tool_use.py` defines two self-contained client tools (a safe
 `calculator` and a mock `get_weather`), their JSON schemas, an `execute_tool` dispatcher (errors

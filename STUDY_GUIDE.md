@@ -18,7 +18,7 @@ The **Claude Certified Architect (CCA) — Foundations** is a proctored, 60-ques
 |---|--------|:------:|------------------------|
 | 1 | **Agentic Architecture** | 27% | ◑ Partially — `tool_use/` (the agentic tool loop), `code_execution/` (server tool as an agent primitive), `documents/` (RAG pipeline). *Gap: Managed Agents.* |
 | 2 | **Claude Code Configuration** | 20% | ○ Out of scope — this is about the Claude Code CLI, not the API. See the official courses. |
-| 3 | **Prompt Engineering & Structured Output** | 20% | ● `vision/` (multi-step structured-analysis prompt + calibrated confidence), `citations/`. |
+| 3 | **Prompt Engineering & Structured Output** | 20% | ● `structured_outputs/` (`messages.parse`, JSON schema, strict tools), `vision/` (multi-step structured-analysis prompt + calibrated confidence), `citations/`. |
 | 4 | **Tool Design & MCP Integration** | 18% | ● `tool_use/` (custom client tools, the agentic loop, tool runner, `tool_choice`), `code_execution/` (server tool). *Gap: MCP.* |
 | 5 | **Context & Reliability** | 15% | ● `prompt_caching/` (measured cost/latency optimization), `documents/` (retrieval to manage context), `citations/` (grounding/trust), `pause_turn` resumption. |
 
@@ -39,11 +39,12 @@ Suggested order (builds from fundamentals to reliability):
 
 1. [`vision/LEARN.md`](vision/LEARN.md) — multimodal input + structured, calibrated prompts
 2. [`citations/LEARN.md`](citations/LEARN.md) — grounding answers in sources, trust
-3. [`documents/LEARN.md`](documents/LEARN.md) — RAG, retrieval, context management
-4. [`prompt_caching/LEARN.md`](prompt_caching/LEARN.md) — cost/latency optimization, prefix stability
-5. [`tool_use/LEARN.md`](tool_use/LEARN.md) — custom tools, the agentic loop, tool runner
-6. [`code_execution/LEARN.md`](code_execution/LEARN.md) — server tools, the Files API, agent primitives
-7. [`video/LEARN.md`](video/LEARN.md) — working within model constraints (no native video), cost/coverage trade-offs
+3. [`structured_outputs/LEARN.md`](structured_outputs/LEARN.md) — schema-valid data, `messages.parse`, strict tools
+4. [`documents/LEARN.md`](documents/LEARN.md) — RAG, retrieval, context management
+5. [`prompt_caching/LEARN.md`](prompt_caching/LEARN.md) — cost/latency optimization, prefix stability
+6. [`tool_use/LEARN.md`](tool_use/LEARN.md) — custom tools, the agentic loop, tool runner
+7. [`code_execution/LEARN.md`](code_execution/LEARN.md) — server tools, the Files API, agent primitives
+8. [`video/LEARN.md`](video/LEARN.md) — working within model constraints (no native video), cost/coverage trade-offs
 
 ## Cross-cutting themes the exam loves
 

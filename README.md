@@ -38,6 +38,7 @@ exercises, and self-check questions:
 [code execution](code_execution/LEARN.md) ·
 [prompt caching](prompt_caching/LEARN.md) ·
 [tool use](tool_use/LEARN.md) ·
+[structured outputs](structured_outputs/LEARN.md) ·
 [video](video/LEARN.md).
 
 The study material is an unofficial community aid — confirm exam scope against the official guide
@@ -197,4 +198,23 @@ agentic loop, the SDK tool runner, `tool_choice`, and `is_error` recovery.
 ```powershell
 .venv\Scripts\python.exe -m streamlit run tool_use/agent_app.py
 .venv\Scripts\python.exe tool_use/run_agent.py -q "Weather in Tokyo, and 100 - 32?"
+```
+
+### Structured outputs
+
+Make Claude return schema-valid data you can use without parsing. Uses `messages.parse` with a
+Pydantic model (validated objects), the raw `output_config.format` JSON schema, and `strict: True`
+tools. The example extracts structured wildlife sighting records from messy free-text field notes.
+
+📚 Study sheet: [`structured_outputs/LEARN.md`](structured_outputs/LEARN.md)
+
+| Example | Description |
+| --- | --- |
+| [`structured_outputs/structured_outputs.ipynb`](structured_outputs/structured_outputs.ipynb) | `messages.parse` → validated objects, batch extraction into a table, the raw `output_config.format` path, strict tool use, and the citations-incompatibility constraint. |
+| [`structured_outputs/extract_app.py`](structured_outputs/extract_app.py) | A Streamlit extractor: paste field notes, get a clean table of schema-valid records (downloadable as JSON). |
+| [`structured_outputs/run_extract.py`](structured_outputs/run_extract.py) | A command-line extractor over a notes file or the built-in sample. |
+
+```powershell
+.venv\Scripts\python.exe -m streamlit run structured_outputs/extract_app.py
+.venv\Scripts\python.exe structured_outputs/run_extract.py --sample
 ```

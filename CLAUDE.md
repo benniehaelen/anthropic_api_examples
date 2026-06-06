@@ -8,9 +8,18 @@ A collection of **self-contained Anthropic API examples**, each demonstrating on
 the Claude Messages API. Examples are Jupyter notebooks (often with a companion Streamlit app
 and/or CLI runner) organized **by topic** in top-level folders, one folder per capability —
 currently `vision/` (image analysis), `video/` (animal recognition in video), `citations/`
-(grounded answers with source citations), and `documents/` (retrieval-augmented search over a
-mixed-format document library), with future siblings like `tool-use/` or `prompt-caching/`. Every
-example lives under a topic folder; there are no loose example notebooks at the repo root.
+(grounded answers with source citations), `documents/` (retrieval-augmented search over a
+mixed-format document library), and `code_execution/` (Claude writes and runs code in a sandbox),
+with future siblings like `tool-use/` or `prompt-caching/`. Every example lives under a topic
+folder; there are no loose example notebooks at the repo root.
+
+Note on code execution: the `code_execution/` topic uses the **code execution server tool**
+(`code_execution_20250825`) — Anthropic runs the code, so there is no client-side tool-result
+loop. `_code_execution.py` centralizes the tool def, a `pause_turn`-aware request helper
+(`run_analysis`, which sends the `files-api-2025-04-14` beta and a `container_upload` block when a
+file is attached), response parsing into simple events, and Files-API upload/download (files
+Claude creates surface as `file_id`s in the result blocks → `download_created_files`). Uses
+`claude-sonnet-4-5` (code execution works on every current model).
 
 Note on documents: the `documents/` topic is RAG — ingest PDF/Word/text/markdown/CSV (`pypdf`,
 `python-docx`, plain decode) → chunk → embed with **Voyage AI** → cosine top-k → send the top

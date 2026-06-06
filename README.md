@@ -107,3 +107,21 @@ passages. **Requires `VOYAGE_API_KEY`** (in addition to `ANTHROPIC_API_KEY`) —
 .venv\Scripts\python.exe -m streamlit run documents/search_app.py
 .venv\Scripts\python.exe documents/run_search.py ./docs --query "..." --k 8 --out answer.html
 ```
+
+### Code execution
+
+Claude writes and runs Python/Bash in a secure sandbox on Anthropic's servers (a *server tool* —
+no client-side tool loop). Upload data via the Files API, and Claude can clean it, analyze it, and
+produce files (e.g. charts) you download back. Sandbox: Python 3.11, ~5 GiB RAM, no internet,
+pandas/numpy/matplotlib/scikit-learn preinstalled.
+
+| Example | Description |
+| --- | --- |
+| [`code_execution/code_execution.ipynb`](code_execution/code_execution.ipynb) | End-to-end: a warm-up calculation, then generate a messy sales CSV, upload it, have Claude clean it and render a bar chart, and download the chart. |
+| [`code_execution/code_app.py`](code_execution/code_app.py) | A Streamlit sandbox: upload a data file (or use the built-in sample), describe a task, and see Claude's narrative, the code it ran, the output, and the files it produced (charts inline). |
+| [`code_execution/run_code.py`](code_execution/run_code.py) | A command-line runner: pass `-p "<task>"` (and optionally `-f data.csv` or `--sample`), print the transcript, and save any files Claude creates. |
+
+```powershell
+.venv\Scripts\python.exe -m streamlit run code_execution/code_app.py
+.venv\Scripts\python.exe code_execution/run_code.py -p "Clean and chart this data" --sample
+```

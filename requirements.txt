@@ -8,3 +8,4 @@ voyageai
 pypdf
 python-docx
 numpy
+mcp  # for the mcp/ topic; equivalently `pip install "anthropic[mcp]"`

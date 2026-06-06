@@ -19,7 +19,7 @@ The **Claude Certified Architect (CCA) — Foundations** is a proctored, 60-ques
 | 1 | **Agentic Architecture** | 27% | ● `agents/` (multi-agent, self-correcting orchestration), `tool_use/` (the agentic tool loop), `code_execution/` (server tool as an agent primitive), `documents/` (RAG pipeline). *Gap: Managed Agents.* |
 | 2 | **Claude Code Configuration** | 20% | ○ Out of scope — this is about the Claude Code CLI, not the API. See the official courses. |
 | 3 | **Prompt Engineering & Structured Output** | 20% | ● `structured_outputs/` (`messages.parse`, JSON schema, strict tools), `vision/` (multi-step structured-analysis prompt + calibrated confidence), `citations/`. |
-| 4 | **Tool Design & MCP Integration** | 18% | ● `tool_use/` (custom client tools, the agentic loop, tool runner, `tool_choice`), `code_execution/` (server tool). *Gap: MCP.* |
+| 4 | **Tool Design & MCP Integration** | 18% | ● `tool_use/` (custom client tools, the agentic loop, tool runner, `tool_choice`), `mcp/` (local MCP server + the tool runner), `code_execution/` (server tool). |
 | 5 | **Context & Reliability** | 15% | ● `prompt_caching/` (measured cost/latency optimization), `documents/` (retrieval to manage context), `citations/` (grounding/trust), `pause_turn` resumption. |
 
 ● strong · ◑ partial · ○ not covered
@@ -44,8 +44,9 @@ Suggested order (builds from fundamentals to reliability):
 5. [`prompt_caching/LEARN.md`](prompt_caching/LEARN.md) — cost/latency optimization, prefix stability
 6. [`tool_use/LEARN.md`](tool_use/LEARN.md) — custom tools, the agentic loop, tool runner
 7. [`code_execution/LEARN.md`](code_execution/LEARN.md) — server tools, the Files API, agent primitives
-8. [`agents/LEARN.md`](agents/LEARN.md) — multi-agent orchestration + the self-correction loop (capstone)
-9. [`video/LEARN.md`](video/LEARN.md) — working within model constraints (no native video), cost/coverage trade-offs
+8. [`mcp/LEARN.md`](mcp/LEARN.md) — connecting Claude to an external tool server (MCP)
+9. [`agents/LEARN.md`](agents/LEARN.md) — multi-agent orchestration + the self-correction loop (capstone)
+10. [`video/LEARN.md`](video/LEARN.md) — working within model constraints (no native video), cost/coverage trade-offs
 
 ## Reference & practice
 

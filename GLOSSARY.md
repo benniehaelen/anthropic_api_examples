@@ -34,7 +34,7 @@ each. See the [STUDY_GUIDE](STUDY_GUIDE.md) for how it all maps to the certifica
 - **Tool runner** — SDK helper (`@beta_tool` + `client.beta.messages.tool_runner`) that runs the
   agentic loop for you. *(tool_use)*
 - **MCP (Model Context Protocol)** — a standard for connecting models to external tools/data;
-  usable via SDK helpers or `mcp_servers`. *(gap — see STUDY_GUIDE)*
+  usable via SDK helpers (local servers) or the `mcp_servers` parameter (remote). *(mcp)*
 
 ## Code execution
 

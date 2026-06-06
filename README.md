@@ -40,6 +40,7 @@ exercises, and self-check questions:
 [tool use](tool_use/LEARN.md) ·
 [structured outputs](structured_outputs/LEARN.md) ·
 [agents](agents/LEARN.md) ·
+[mcp](mcp/LEARN.md) ·
 [video](video/LEARN.md).
 
 Plus repo-wide references: a [**PRACTICE_EXAM**](PRACTICE_EXAM.md) (scenario questions with
@@ -243,4 +244,24 @@ hand-offs, and bounded loops. (Makes several API calls per run — keep the caps
 ```powershell
 .venv\Scripts\python.exe -m streamlit run agents/analyst_app.py
 .venv\Scripts\python.exe agents/run_analyst.py --sample
+```
+
+### MCP (Model Context Protocol)
+
+Connect Claude to an external **tool server** via the open MCP standard. This topic runs a small
+**local MCP server** as a subprocess (stdio) and lets Claude use its tools through the SDK's MCP
+helpers + tool runner — then documents the remote `mcp_servers` alternative. Needs
+`pip install "anthropic[mcp]" mcp`. (The MCP client path is async, so this topic has a notebook +
+CLI, no Streamlit app.)
+
+📚 Study sheet: [`mcp/LEARN.md`](mcp/LEARN.md)
+
+| Example | Description |
+| --- | --- |
+| [`mcp/server.py`](mcp/server.py) | A self-contained MCP server (FastMCP) exposing a few wildlife tools over stdio. |
+| [`mcp/mcp_demo.ipynb`](mcp/mcp_demo.ipynb) | Spawn the server, list its tools, and watch Claude call them via the tool runner; plus local-vs-remote MCP. |
+| [`mcp/run_mcp.py`](mcp/run_mcp.py) | A command-line demo that runs a query through the local MCP server and prints which tools were called. |
+
+```powershell
+.venv\Scripts\python.exe mcp/run_mcp.py -q "Compare the red fox and gray wolf, with sighting counts."
 ```

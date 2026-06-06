@@ -11,9 +11,17 @@ currently `vision/` (image analysis), `video/` (animal recognition in video), `c
 (grounded answers with source citations), `documents/` (retrieval-augmented search over a
 mixed-format document library), `code_execution/` (Claude writes and runs code in a sandbox), and
 `prompt_caching/` (reuse a cached prefix; measure the savings), `tool_use/` (custom client tools +
-the agentic loop), `structured_outputs/` (schema-valid data via `messages.parse`), and `agents/`
-(multi-agent, self-correcting analyst — the agentic capstone). Every example lives under a topic
-folder; there are no loose example notebooks at the repo root.
+the agentic loop), `structured_outputs/` (schema-valid data via `messages.parse`), `agents/`
+(multi-agent, self-correcting analyst — the agentic capstone), and `mcp/` (connect Claude to a
+local MCP tool server). Every example lives under a topic folder; there are no loose example
+notebooks at the repo root.
+
+Note on MCP: `mcp/server.py` is a self-contained FastMCP stdio server; `mcp/_mcp_demo.py` spawns
+it as a subprocess, lists its tools, wraps them with `async_mcp_tool`, and drives the SDK tool
+runner — so this topic's client path is **async** (notebook uses top-level `await`, CLI uses
+`asyncio.run`; no Streamlit app). Needs `pip install "anthropic[mcp]" mcp`. `load_dotenv()`
+resolves `.env` from the calling file's directory, so run these from inside the repo. The LEARN
+sheet also documents the remote `mcp_servers` parameter. Uses `claude-sonnet-4-5`.
 
 Note on agents: `agents/_analyst.py` orchestrates four roles in plain Python — orchestrator
 (`messages.parse` → `Plan`), analyst (code-execution server tool over an uploaded CSV), critic

@@ -3,6 +3,11 @@
 A growing collection of self-contained examples for the [Anthropic API](https://docs.anthropic.com/),
 using the official `anthropic` Python SDK.
 
+> 📚 **Studying for the [Claude Certified Architect](https://anthropic.skilljar.com/) exam?**
+> See the [**STUDY_GUIDE**](STUDY_GUIDE.md) — it maps these examples to the exam domains, and each
+> topic has a `LEARN.md` with objectives, an API cheat-sheet, pitfalls, exercises, and self-check
+> questions.
+
 ## Setup
 
 The repo includes a Python 3.14 virtual environment in `.venv/`. On Windows / PowerShell:
@@ -24,6 +29,8 @@ Examples are organized into top-level topic folders, one per Claude API capabili
 notebook with Jupyter (or the VS Code notebook editor) and run the cells top to bottom.
 
 ### Vision
+
+📚 Study sheet: [`vision/LEARN.md`](vision/LEARN.md)
 
 | Example | Description |
 | --- | --- |
@@ -54,6 +61,8 @@ The Claude API takes images, not video — so these examples decode a clip into 
 timestamp-labeled frames, analyze them as one sequence, and report a per-species timeline.
 Frame decoding uses OpenCV.
 
+📚 Study sheet: [`video/LEARN.md`](video/LEARN.md)
+
 | Example | Description |
 | --- | --- |
 | [`video/animal_video_id.ipynb`](video/animal_video_id.ipynb) | Identify animals across a short video: sample frames at a fixed interval, send them to Claude as one ordered sequence, and collapse the per-frame JSON into a per-species timeline (first/last seen, frames, max count). |
@@ -78,6 +87,8 @@ Claude's Citations feature grounds an answer in documents you provide and return
 source text for each claim. These examples render that as a footnoted article — hover a marker
 to preview the cited source, click to jump to the reference.
 
+📚 Study sheet: [`citations/LEARN.md`](citations/LEARN.md)
+
 | Example | Description |
 | --- | --- |
 | [`citations/citations_demo.ipynb`](citations/citations_demo.ipynb) | Walk through the Citations API: build citable document blocks, ask a question, inspect the citation objects (`cited_text`, document index/title, char/page/block locations), and render the cited answer. |
@@ -97,6 +108,8 @@ then answers from the top passages with citations. Returns both the cited answer
 passages. **Requires `VOYAGE_API_KEY`** (in addition to `ANTHROPIC_API_KEY`) — get one at
 [voyageai.com](https://www.voyageai.com/).
 
+📚 Study sheet: [`documents/LEARN.md`](documents/LEARN.md)
+
 | Example | Description |
 | --- | --- |
 | [`documents/document_search.ipynb`](documents/document_search.ipynb) | Walk through the pipeline: ingest PDF/Word/text/markdown/CSV, chunk, embed with Voyage, retrieve top-k by cosine similarity, and have Claude answer with citations to the passages. |
@@ -114,6 +127,8 @@ Claude writes and runs Python/Bash in a secure sandbox on Anthropic's servers (a
 no client-side tool loop). Upload data via the Files API, and Claude can clean it, analyze it, and
 produce files (e.g. charts) you download back. Sandbox: Python 3.11, ~5 GiB RAM, no internet,
 pandas/numpy/matplotlib/scikit-learn preinstalled.
+
+📚 Study sheet: [`code_execution/LEARN.md`](code_execution/LEARN.md)
 
 | Example | Description |
 | --- | --- |

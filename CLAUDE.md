@@ -131,6 +131,13 @@ abstraction until there is a real second consumer.
   source and license in a markdown cell.
 - Start each notebook with a markdown title cell describing the capability and noting the
   `ANTHROPIC_API_KEY` requirement.
+- Each topic also ships a **`<topic>/LEARN.md`** study sheet (the repo doubles as Claude
+  Certified Architect exam prep — see `STUDY_GUIDE.md`). Follow the established structure: where
+  it fits in the CCA exam (domain + weight), learning objectives, key concepts, an API
+  cheat-sheet, common pitfalls, "Try it yourself" exercises tied to the code, "Check yourself"
+  Q&A with collapsible `<details>` answers, and further-reading doc links. When adding a new
+  topic, add its `LEARN.md` and a row in the `STUDY_GUIDE.md` domain-coverage table; be honest
+  about partial/zero coverage rather than overclaiming.
 - A Streamlit companion app shares its prompt and image helpers with the notebook through the
   per-topic `_wildlife.py`-style module (see "Shared per-topic module" above) rather than
   copying them, and streams the response via `client.messages.stream`. Name it `<name>_app.py`

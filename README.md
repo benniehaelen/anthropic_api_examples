@@ -21,7 +21,25 @@ copy .env.example .env
 # then edit .env and set ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-Each example loads the key from `.env` via `python-dotenv`, so you only configure it once.
+Each example loads the key from `.env` via `python-dotenv`, so you only configure it once. The
+`documents/` topic additionally needs a `VOYAGE_API_KEY` (Voyage AI powers retrieval — get one at
+[voyageai.com](https://www.voyageai.com/)); every other topic needs only `ANTHROPIC_API_KEY`.
+
+## Study guide
+
+This repo doubles as hands-on prep for the [Claude Certified Architect](https://anthropic.skilljar.com/)
+(CCA) exam. The [**STUDY_GUIDE**](STUDY_GUIDE.md) maps each example to the exam's five domains
+(with an honest "what's covered vs. not" table) and suggests a study order. Each topic ships a
+`LEARN.md` study sheet with learning objectives, an API cheat-sheet, common pitfalls, hands-on
+exercises, and self-check questions:
+[vision](vision/LEARN.md) ·
+[citations](citations/LEARN.md) ·
+[documents](documents/LEARN.md) ·
+[code execution](code_execution/LEARN.md) ·
+[video](video/LEARN.md).
+
+The study material is an unofficial community aid — confirm exam scope against the official guide
+on [Anthropic's training platform](https://anthropic.skilljar.com/).
 
 ## Examples
 

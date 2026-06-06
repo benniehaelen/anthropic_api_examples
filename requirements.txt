@@ -4,3 +4,7 @@ streamlit
 pillow
 httpx
 opencv-python-headless
+voyageai
+pypdf
+python-docx
+numpy

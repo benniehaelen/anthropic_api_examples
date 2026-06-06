@@ -88,3 +88,22 @@ Run the Streamlit app (from the repo root):
 ```powershell
 .venv\Scripts\python.exe -m streamlit run citations/citation_app.py
 ```
+
+### Documents (search a library)
+
+Retrieval-augmented search over a library of mixed-format documents. The Anthropic API has no
+embeddings endpoint, so retrieval uses **Voyage AI** (the provider Anthropic recommends); Claude
+then answers from the top passages with citations. Returns both the cited answer and the ranked
+passages. **Requires `VOYAGE_API_KEY`** (in addition to `ANTHROPIC_API_KEY`) — get one at
+[voyageai.com](https://www.voyageai.com/).
+
+| Example | Description |
+| --- | --- |
+| [`documents/document_search.ipynb`](documents/document_search.ipynb) | Walk through the pipeline: ingest PDF/Word/text/markdown/CSV, chunk, embed with Voyage, retrieve top-k by cosine similarity, and have Claude answer with citations to the passages. |
+| [`documents/search_app.py`](documents/search_app.py) | A Streamlit app: drag in a set of documents, type a query, and see Claude's cited answer plus the ranked passages with similarity scores. |
+| [`documents/run_search.py`](documents/run_search.py) | A command-line runner: point it at files or a folder, pass `--query`, and print the answer + ranked passages (optionally write the cited result to HTML with `--out`). |
+
+```powershell
+.venv\Scripts\python.exe -m streamlit run documents/search_app.py
+.venv\Scripts\python.exe documents/run_search.py ./docs --query "..." --k 8 --out answer.html
+```

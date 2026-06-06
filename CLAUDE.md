@@ -7,10 +7,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A collection of **self-contained Anthropic API examples**, each demonstrating one capability of
 the Claude Messages API. Examples are Jupyter notebooks (often with a companion Streamlit app
 and/or CLI runner) organized **by topic** in top-level folders, one folder per capability —
-currently `vision/` (image analysis), `video/` (animal recognition in video), and `citations/`
-(grounded answers with source citations), with future siblings like `tool-use/` or
-`prompt-caching/`. Every example lives under a topic folder; there are no loose example notebooks
-at the repo root.
+currently `vision/` (image analysis), `video/` (animal recognition in video), `citations/`
+(grounded answers with source citations), and `documents/` (retrieval-augmented search over a
+mixed-format document library), with future siblings like `tool-use/` or `prompt-caching/`. Every
+example lives under a topic folder; there are no loose example notebooks at the repo root.
+
+Note on documents: the `documents/` topic is RAG — ingest PDF/Word/text/markdown/CSV (`pypdf`,
+`python-docx`, plain decode) → chunk → embed with **Voyage AI** → cosine top-k → send the top
+passages to Claude as a citable custom-content document → cited answer + ranked passages. The
+Anthropic API has **no embeddings endpoint**, which is why retrieval uses Voyage; this topic
+therefore needs a **`VOYAGE_API_KEY`** in addition to `ANTHROPIC_API_KEY`. It reuses the
+citations pattern (custom-content document → `content_block_location` citations mapped back to the
+retrieved passage). Uses `claude-opus-4-8` like `citations/`.
 
 Note on citations: the `citations/` topic enables `citations: {"enabled": True}` on `document`
 content blocks; Claude returns text blocks where each block optionally carries a `citations` list
@@ -35,7 +43,9 @@ analogous to `vision/_wildlife.py`).
   - Install deps: `.venv\Scripts\python.exe -m pip install -r requirements.txt`
   - Run a script: `.venv\Scripts\python.exe <script.py>`
 - The **API key** is read from a `.env` file at the repo root (`ANTHROPIC_API_KEY`) via
-  `python-dotenv`; `.env.example` is the template. `.env` is gitignored.
+  `python-dotenv`; `.env.example` is the template. `.env` is gitignored. The `documents/` topic
+  additionally needs `VOYAGE_API_KEY` (Voyage AI embeddings). **Never commit real keys** — only
+  `.env.example` with empty placeholders is tracked.
 - There is **no test suite or linter** configured yet. Examples are validated by running the
   notebook cells (each API call costs tokens).
 - Some topics also ship a **Streamlit app** (`<topic>/<name>_app.py`) as an interactive front

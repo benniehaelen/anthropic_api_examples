@@ -7,9 +7,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A collection of **self-contained Anthropic API examples**, each demonstrating one capability of
 the Claude Messages API. Examples are Jupyter notebooks (often with a companion Streamlit app
 and/or CLI runner) organized **by topic** in top-level folders, one folder per capability —
-currently `vision/` (image analysis) and `video/` (animal recognition in video), with future
-siblings like `tool-use/` or `prompt-caching/`. Every example lives under a topic folder; there
-are no loose example notebooks at the repo root.
+currently `vision/` (image analysis), `video/` (animal recognition in video), and `citations/`
+(grounded answers with source citations), with future siblings like `tool-use/` or
+`prompt-caching/`. Every example lives under a topic folder; there are no loose example notebooks
+at the repo root.
+
+Note on citations: the `citations/` topic enables `citations: {"enabled": True}` on `document`
+content blocks; Claude returns text blocks where each block optionally carries a `citations` list
+(`cited_text` + `document_index`/`document_title` + a location — char range for plain text, page
+range for PDF, block range for custom content). `_citations.py` renders that into a footnoted
+HTML page (hover-preview + click-to-jump), shown via `st.components.v1.html` in the app. Citations
+are **incompatible with Structured Outputs** (`output_config.format`) — enabling both 400s.
 
 Note on video: the Claude API has **no native video input** — it takes images. The `video/`
 topic therefore decodes a clip into sampled, timestamp-labeled frames (OpenCV), sends them as one

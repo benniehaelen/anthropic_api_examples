@@ -71,3 +71,20 @@ Frames are downscaled to `--longest-side` pixels (default 768) to control image-
 Raising it gives the model more detail, but it can't compensate for a subject that is small or
 occluded in the frame — for hard species IDs, cropping the animal before sending it is far more
 effective than raising global resolution.
+
+### Citations
+
+Claude's Citations feature grounds an answer in documents you provide and returns the exact
+source text for each claim. These examples render that as a footnoted article — hover a marker
+to preview the cited source, click to jump to the reference.
+
+| Example | Description |
+| --- | --- |
+| [`citations/citations_demo.ipynb`](citations/citations_demo.ipynb) | Walk through the Citations API: build citable document blocks, ask a question, inspect the citation objects (`cited_text`, document index/title, char/page/block locations), and render the cited answer. |
+| [`citations/citation_app.py`](citations/citation_app.py) | A Streamlit app: edit the source documents, ask a question, and Claude's grounded answer renders with hover-preview footnotes and click-to-jump references. Ships with a wildlife knowledge base. |
+
+Run the Streamlit app (from the repo root):
+
+```powershell
+.venv\Scripts\python.exe -m streamlit run citations/citation_app.py
+```

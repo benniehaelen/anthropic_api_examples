@@ -13,6 +13,7 @@ renders the cited answer as an editorial HTML page with hover-preview footnotes 
 click-to-jump references. Imported by `citation_app.py` and `citations_demo.ipynb`.
 """
 
+import base64
 from html import escape
 
 # Citations are supported on all current models (except Haiku 3). This topic uses Opus 4.8 for
@@ -65,26 +66,39 @@ DEFAULT_QUESTION = "How do the red fox and polar bear differ in their habitats a
 # --------------------------------------------------------------------------- #
 # API call
 # --------------------------------------------------------------------------- #
+def _document_block(doc):
+    """Build one citable `document` block from a doc dict.
+
+    A doc is either {"title", "text"} (plain text → character-range citations) or
+    {"title", "pdf": <bytes>} (PDF → page-range citations).
+    """
+    if doc.get("pdf") is not None:
+        source = {
+            "type": "base64",
+            "media_type": "application/pdf",
+            "data": base64.standard_b64encode(doc["pdf"]).decode("utf-8"),
+        }
+    else:
+        source = {"type": "text", "media_type": "text/plain", "data": doc["text"]}
+    return {
+        "type": "document",
+        "source": source,
+        "title": doc.get("title", "Document"),
+        "citations": {"enabled": True},
+        # Citations and prompt caching compose: cache the source documents. (Short docs below the
+        # ~1024-token minimum won't actually cache, but the pattern is correct.)
+        "cache_control": {"type": "ephemeral"},
+    }
+
+
 def build_content(docs, question):
     """Build the user message content: one citable document block per doc, then the question."""
-    content = []
-    for doc in docs:
-        content.append(
-            {
-                "type": "document",
-                "source": {"type": "text", "media_type": "text/plain", "data": doc["text"]},
-                "title": doc["title"],
-                "citations": {"enabled": True},
-                # Citations and prompt caching compose: cache the source documents. (Short docs
-                # below the ~1024-token minimum won't actually cache, but the pattern is correct.)
-                "cache_control": {"type": "ephemeral"},
-            }
-        )
+    content = [_document_block(doc) for doc in docs]
     content.append({"type": "text", "text": question})
     return content
 
 
-def ask(client, docs, question, max_tokens=1024):
+def ask(client, docs, question, max_tokens=2048):
     """Send the documents + question with citations enabled; return the response content blocks."""
     message = client.messages.create(
         model=MODEL,

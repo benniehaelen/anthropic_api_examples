@@ -81,7 +81,7 @@ to preview the cited source, click to jump to the reference.
 | Example | Description |
 | --- | --- |
 | [`citations/citations_demo.ipynb`](citations/citations_demo.ipynb) | Walk through the Citations API: build citable document blocks, ask a question, inspect the citation objects (`cited_text`, document index/title, char/page/block locations), and render the cited answer. |
-| [`citations/citation_app.py`](citations/citation_app.py) | A Streamlit app: edit the source documents, ask a question, and Claude's grounded answer renders with hover-preview footnotes and click-to-jump references. Ships with a wildlife knowledge base. |
+| [`citations/citation_app.py`](citations/citation_app.py) | A Streamlit app: drag in documents (`.txt`, `.md`, `.pdf`) or edit text inline, ask a question, and Claude's grounded answer renders with hover-preview footnotes and click-to-jump references. PDFs cite by page, text by character range. Ships with a wildlife knowledge base. |
 
 Run the Streamlit app (from the repo root):
 

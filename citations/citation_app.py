@@ -73,25 +73,54 @@ if not os.environ.get("ANTHROPIC_API_KEY"):
     )
     st.stop()
 
-with st.expander("Source documents (edit freely — start each doc with `# Title`)", expanded=False):
+uploaded = st.file_uploader(
+    "Drag in documents (.txt, .md, .pdf) — PDFs are cited by page, text by character range",
+    type=["txt", "md", "pdf"],
+    accept_multiple_files=True,
+)
+st.caption(
+    "Other formats (.docx, .csv, .xlsx) aren't supported as citable documents — convert them to "
+    "text first. Larger documents cost more input tokens."
+)
+
+with st.expander("Or edit text documents here (start each doc with `# Title`)", expanded=not uploaded):
     docs_raw = st.text_area(
         "documents",
         value=docs_to_text(WILDLIFE_DOCS),
-        height=260,
+        height=240,
         label_visibility="collapsed",
     )
 
 question = st.text_input("Question", value=DEFAULT_QUESTION)
 ask_clicked = st.button("Ask", type="primary")
 
+
+def uploads_to_docs(files):
+    """Turn uploaded files into doc dicts: PDFs carry bytes, text files carry decoded text."""
+    docs = []
+    for file in files or []:
+        if file.name.lower().endswith(".pdf"):
+            docs.append({"title": file.name, "pdf": file.getvalue()})
+        else:
+            raw = file.getvalue()
+            try:
+                text = raw.decode("utf-8")
+            except UnicodeDecodeError:
+                text = raw.decode("latin-1", errors="replace")
+            docs.append({"title": file.name, "text": text.strip()})
+    return docs
+
+
 if ask_clicked:
-    docs = parse_docs(docs_raw)
+    # Combine dragged-in files with any text typed in the editor.
+    docs = uploads_to_docs(uploaded) + parse_docs(docs_raw)
     if not docs:
-        st.error("Add at least one document (a `# Title` line followed by some text).")
+        st.error("Add at least one document — drag in a file or type one (a `# Title` line + text).")
     elif not question.strip():
         st.error("Enter a question.")
     else:
-        with st.spinner("Asking Claude with citations enabled…"):
+        sources = ", ".join(d["title"] for d in docs)
+        with st.spinner(f"Asking Claude with citations over: {sources} …"):
             try:
                 content = ask(get_client(), docs, question.strip())
                 st.session_state["cite_result"] = {"question": question.strip(), "content": content}

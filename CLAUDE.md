@@ -15,9 +15,12 @@ at the repo root.
 Note on citations: the `citations/` topic enables `citations: {"enabled": True}` on `document`
 content blocks; Claude returns text blocks where each block optionally carries a `citations` list
 (`cited_text` + `document_index`/`document_title` + a location — char range for plain text, page
-range for PDF, block range for custom content). `_citations.py` renders that into a footnoted
-HTML page (hover-preview + click-to-jump), shown via `st.components.v1.html` in the app. Citations
-are **incompatible with Structured Outputs** (`output_config.format`) — enabling both 400s.
+range for PDF, block range for custom content). `_citations.py` builds either a plain-text or a
+base64-PDF document block per doc (`_document_block`), and renders the response into a footnoted
+HTML page (hover-preview + click-to-jump), shown via `st.components.v1.html` in the app. The app
+accepts dragged-in `.txt`/`.md`/`.pdf` files (PDFs → page citations, text → char citations);
+`.docx`/`.csv`/`.xlsx` are not citable document blocks and must be converted to text first.
+Citations are **incompatible with Structured Outputs** (`output_config.format`) — enabling both 400s.
 
 Note on video: the Claude API has **no native video input** — it takes images. The `video/`
 topic therefore decodes a clip into sampled, timestamp-labeled frames (OpenCV), sends them as one

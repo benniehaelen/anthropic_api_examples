@@ -36,6 +36,7 @@ exercises, and self-check questions:
 [citations](citations/LEARN.md) ·
 [documents](documents/LEARN.md) ·
 [code execution](code_execution/LEARN.md) ·
+[prompt caching](prompt_caching/LEARN.md) ·
 [video](video/LEARN.md).
 
 The study material is an unofficial community aid — confirm exam scope against the official guide
@@ -157,4 +158,23 @@ pandas/numpy/matplotlib/scikit-learn preinstalled.
 ```powershell
 .venv\Scripts\python.exe -m streamlit run code_execution/code_app.py
 .venv\Scripts\python.exe code_execution/run_code.py -p "Clean and chart this data" --sample
+```
+
+### Prompt caching
+
+Reuse a large, stable prompt prefix across requests to cut input cost (~0.1× on cache reads) and
+latency. These examples cache a sizable document + system prompt + tool, then **measure** the
+savings via the `usage` fields — and show the classic "silent invalidator" that breaks caching.
+
+📚 Study sheet: [`prompt_caching/LEARN.md`](prompt_caching/LEARN.md)
+
+| Example | Description |
+| --- | --- |
+| [`prompt_caching/caching_demo.ipynb`](prompt_caching/caching_demo.ipynb) | Walk through caching: confirm the prefix clears the model minimum, watch the first call write and later calls read (`cache_creation_input_tokens` vs `cache_read_input_tokens`), measure the savings, and break it on purpose with a volatile prefix. |
+| [`prompt_caching/cache_app.py`](prompt_caching/cache_app.py) | A Streamlit "cache lab": run a batch of questions, chart per-request cache-read vs write vs full-price tokens, and toggle caching / a volatile prefix to see the effect. |
+| [`prompt_caching/run_cache.py`](prompt_caching/run_cache.py) | A command-line demo; `--compare` runs the batch uncached then cached and reports how much of the prompt moved to ~0.1× price. |
+
+```powershell
+.venv\Scripts\python.exe -m streamlit run prompt_caching/cache_app.py
+.venv\Scripts\python.exe prompt_caching/run_cache.py --compare
 ```

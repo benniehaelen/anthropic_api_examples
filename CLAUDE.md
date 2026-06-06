@@ -9,9 +9,17 @@ the Claude Messages API. Examples are Jupyter notebooks (often with a companion 
 and/or CLI runner) organized **by topic** in top-level folders, one folder per capability —
 currently `vision/` (image analysis), `video/` (animal recognition in video), `citations/`
 (grounded answers with source citations), `documents/` (retrieval-augmented search over a
-mixed-format document library), and `code_execution/` (Claude writes and runs code in a sandbox),
-with future siblings like `tool-use/` or `prompt-caching/`. Every example lives under a topic
-folder; there are no loose example notebooks at the repo root.
+mixed-format document library), `code_execution/` (Claude writes and runs code in a sandbox), and
+`prompt_caching/` (reuse a cached prefix; measure the savings), with future siblings like
+`tool-use/`. Every example lives under a topic folder; there are no loose example notebooks at the
+repo root.
+
+Note on prompt caching: the `prompt_caching/` topic builds a large cacheable prefix (a generated
+handbook + system prompt + a tool), runs questions with `cache_control` on/off, and reports the
+`usage` metrics (`cache_creation_input_tokens` write / `cache_read_input_tokens` read /
+`input_tokens` remainder). It also demonstrates the silent-invalidator failure mode (a volatile
+prefix before the breakpoint). Minimum cacheable prefix is model-dependent (1024 Sonnet 4.5 /
+4096 Opus 4.8) — the generated handbook clears 4096. Uses `claude-sonnet-4-5`.
 
 Note on code execution: the `code_execution/` topic uses the **code execution server tool**
 (`code_execution_20250825`) — Anthropic runs the code, so there is no client-side tool-result

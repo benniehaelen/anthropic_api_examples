@@ -20,7 +20,7 @@ The **Claude Certified Architect (CCA) — Foundations** is a proctored, 60-ques
 | 2 | **Claude Code Configuration** | 20% | ○ Out of scope — this is about the Claude Code CLI, not the API. See the official courses. |
 | 3 | **Prompt Engineering & Structured Output** | 20% | ● `vision/` (multi-step structured-analysis prompt + calibrated confidence), `citations/`. |
 | 4 | **Tool Design & MCP Integration** | 18% | ◑ Partially — `code_execution/` (server tool). *Gaps: custom client tools, MCP.* |
-| 5 | **Context & Reliability** | 15% | ● `documents/` (retrieval to manage context), `citations/` (grounding/trust), `pause_turn` + prompt-caching patterns throughout. |
+| 5 | **Context & Reliability** | 15% | ● `prompt_caching/` (measured cost/latency optimization), `documents/` (retrieval to manage context), `citations/` (grounding/trust), `pause_turn` resumption. |
 
 ● strong · ◑ partial · ○ not covered
 
@@ -40,15 +40,17 @@ Suggested order (builds from fundamentals to reliability):
 1. [`vision/LEARN.md`](vision/LEARN.md) — multimodal input + structured, calibrated prompts
 2. [`citations/LEARN.md`](citations/LEARN.md) — grounding answers in sources, trust
 3. [`documents/LEARN.md`](documents/LEARN.md) — RAG, retrieval, context management
-4. [`code_execution/LEARN.md`](code_execution/LEARN.md) — server tools, the Files API, agent primitives
-5. [`video/LEARN.md`](video/LEARN.md) — working within model constraints (no native video), cost/coverage trade-offs
+4. [`prompt_caching/LEARN.md`](prompt_caching/LEARN.md) — cost/latency optimization, prefix stability
+5. [`code_execution/LEARN.md`](code_execution/LEARN.md) — server tools, the Files API, agent primitives
+6. [`video/LEARN.md`](video/LEARN.md) — working within model constraints (no native video), cost/coverage trade-offs
 
 ## Cross-cutting themes the exam loves
 
 These show up across domains and across this repo — know them cold:
 
 - **Prompt caching** — prefix stability, `cache_control` placement, what silently invalidates a
-  cache (`usage.cache_read_input_tokens` to verify). Used in `citations/` and `documents/`.
+  cache (`usage.cache_read_input_tokens` to verify). Demonstrated and measured in
+  `prompt_caching/`; also used in `citations/` and `documents/`.
 - **Citations vs. Structured Outputs** — they are **mutually incompatible** (enabling both 400s).
   A classic "which feature do I reach for" trade-off.
 - **Reliability patterns** — `pause_turn` resumption (`code_execution/`), graceful degradation

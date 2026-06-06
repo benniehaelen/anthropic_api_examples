@@ -39,6 +39,7 @@ exercises, and self-check questions:
 [prompt caching](prompt_caching/LEARN.md) ·
 [tool use](tool_use/LEARN.md) ·
 [structured outputs](structured_outputs/LEARN.md) ·
+[agents](agents/LEARN.md) ·
 [video](video/LEARN.md).
 
 Plus repo-wide references: a [**PRACTICE_EXAM**](PRACTICE_EXAM.md) (scenario questions with
@@ -221,4 +222,25 @@ tools. The example extracts structured wildlife sighting records from messy free
 ```powershell
 .venv\Scripts\python.exe -m streamlit run structured_outputs/extract_app.py
 .venv\Scripts\python.exe structured_outputs/run_extract.py --sample
+```
+
+### Agents
+
+A self-correcting, multi-agent data analyst — the repo's agentic capstone. An **orchestrator**
+decomposes a question, **analyst** agents write and run code to answer each part, a **critic**
+reviews each finding and sends weak ones back for revision, and a **synthesizer** writes the final
+report. Shows decomposition/fan-out, the act→critique→revise self-correction loop, structured
+hand-offs, and bounded loops. (Makes several API calls per run — keep the caps low.)
+
+📚 Study sheet: [`agents/LEARN.md`](agents/LEARN.md)
+
+| Example | Description |
+| --- | --- |
+| [`agents/analyst.ipynb`](agents/analyst.ipynb) | Walk the loop: orchestrator plan → analyst (code execution) ⇄ critic (structured verdict) → synthesizer, over a generated dataset with planted data-quality issues. |
+| [`agents/analyst_app.py`](agents/analyst_app.py) | A Streamlit app that streams the multi-agent trace live, then renders the final report. |
+| [`agents/run_analyst.py`](agents/run_analyst.py) | A command-line agent over your CSV (or the built-in sample). |
+
+```powershell
+.venv\Scripts\python.exe -m streamlit run agents/analyst_app.py
+.venv\Scripts\python.exe agents/run_analyst.py --sample
 ```

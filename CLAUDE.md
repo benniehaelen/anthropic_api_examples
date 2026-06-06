@@ -11,8 +11,17 @@ currently `vision/` (image analysis), `video/` (animal recognition in video), `c
 (grounded answers with source citations), `documents/` (retrieval-augmented search over a
 mixed-format document library), `code_execution/` (Claude writes and runs code in a sandbox), and
 `prompt_caching/` (reuse a cached prefix; measure the savings), `tool_use/` (custom client tools +
-the agentic loop), and `structured_outputs/` (schema-valid data via `messages.parse`). Every
-example lives under a topic folder; there are no loose example notebooks at the repo root.
+the agentic loop), `structured_outputs/` (schema-valid data via `messages.parse`), and `agents/`
+(multi-agent, self-correcting analyst — the agentic capstone). Every example lives under a topic
+folder; there are no loose example notebooks at the repo root.
+
+Note on agents: `agents/_analyst.py` orchestrates four roles in plain Python — orchestrator
+(`messages.parse` → `Plan`), analyst (code-execution server tool over an uploaded CSV), critic
+(`messages.parse` → `Verdict`), synthesizer — with an analyst⇄critic self-correction loop bounded
+by `max_revisions`/`max_subtasks`. It runs **many** API calls per invocation (keep caps low). The
+critic is tuned to pass correct-and-supported findings (not demand exhaustiveness) so the loop
+converges; the analyst is instructed to compute and print results in one turn. Uses
+`claude-sonnet-4-5`.
 
 Note on structured outputs: `structured_outputs/_structured_outputs.py` extracts a Pydantic
 `SightingReport` from free-text notes via `client.messages.parse(output_format=...)` →

@@ -10,3 +10,11 @@ __pycache__/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Generated example artifacts (written when running the notebooks/CLIs)
+sample_sales.csv
+observations.csv
+cleaned_sales.csv
+revenue_by_region.png
+claude_outputs/
+answer.html

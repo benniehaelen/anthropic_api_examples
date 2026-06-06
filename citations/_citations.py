@@ -15,10 +15,11 @@ click-to-jump references. Imported by `citation_app.py` and `citations_demo.ipyn
 
 from html import escape
 
-# NOTE: the rest of this repo standardizes on claude-sonnet-4-5; we keep that here for
-# consistency and cost. Citations are supported on all current models (except Haiku 3); switch
-# to claude-opus-4-8 if you want the highest citation quality.
-MODEL = "claude-sonnet-4-5"
+# Citations are supported on all current models (except Haiku 3). This topic uses Opus 4.8 for
+# the highest citation quality (the rest of the repo standardizes on claude-sonnet-4-5). Opus 4.8
+# drops temperature/top_p/top_k and uses adaptive thinking only — this call sets none of those,
+# so it is compatible as-is.
+MODEL = "claude-opus-4-8"
 
 # A tiny plain-text knowledge base. Plain-text documents are auto-chunked into sentences, so
 # Claude can cite a single sentence or a span of them — ideal for footnote-style markers.

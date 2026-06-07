@@ -52,6 +52,13 @@ answers), a [**FEATURE_GUIDE**](FEATURE_GUIDE.md) (when to reach for what), a
 The study material is an unofficial community aid — confirm exam scope against the official guide
 on [Anthropic's training platform](https://anthropic.skilljar.com/).
 
+## Contributing
+
+New topics are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for the repo's shape (one
+top-level folder per capability: a shared `_<topic>.py` module + notebook + optional app/CLI +
+`LEARN.md`) and the add-a-topic checklist. Run the offline smoke test before a PR:
+`.venv\Scripts\python.exe tests/smoke_test.py` (CI runs it on every push/PR).
+
 ## Examples
 
 Examples are organized into top-level topic folders, one per Claude API capability. Open a

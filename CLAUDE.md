@@ -94,8 +94,12 @@ analogous to `vision/_wildlife.py`).
   `python-dotenv`; `.env.example` is the template. `.env` is gitignored. The `documents/` topic
   additionally needs `VOYAGE_API_KEY` (Voyage AI embeddings). **Never commit real keys** — only
   `.env.example` with empty placeholders is tracked.
-- There is **no test suite or linter** configured yet. Examples are validated by running the
-  notebook cells (each API call costs tokens).
+- **Smoke test (offline, no API key):** `.venv\Scripts\python.exe tests/smoke_test.py` compiles
+  every `.py`, imports each shared `_*.py` module (catching missing deps / import errors), and
+  validates every notebook is well-formed JSON. It makes **no API calls**. GitHub Actions runs it
+  on push/PR (`.github/workflows/ci.yml`). Run it before committing; after adding a topic, its
+  shared module and notebook are picked up automatically. Beyond this, examples are validated by
+  running the cells / CLIs (which do cost tokens).
 - Some topics also ship a **Streamlit app** (`<topic>/<name>_app.py`) as an interactive front
   end for the same analysis. Run one with
   `.venv\Scripts\python.exe -m streamlit run <topic>/<name>_app.py`. To smoke-test that an app

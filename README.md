@@ -1,5 +1,7 @@
 # Anthropic API examples
 
+[![smoke](https://github.com/benniehaelen/anthropic_api_examples/actions/workflows/ci.yml/badge.svg)](https://github.com/benniehaelen/anthropic_api_examples/actions/workflows/ci.yml)
+
 A growing collection of self-contained examples for the [Anthropic API](https://docs.anthropic.com/),
 using the official `anthropic` Python SDK.
 

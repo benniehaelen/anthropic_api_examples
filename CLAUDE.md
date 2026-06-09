@@ -14,7 +14,18 @@ mixed-format document library), `code_execution/` (Claude writes and runs code i
 the agentic loop), `structured_outputs/` (schema-valid data via `messages.parse`), `agents/`
 (multi-agent, self-correcting analyst — the agentic capstone), and `mcp/` (connect Claude to a
 local MCP tool server). Every example lives under a topic folder; there are no loose example
-notebooks at the repo root.
+notebooks at the repo root. Plus `advisor/` (the beta executor+advisor tool).
+
+Note on advisor: `advisor/_advisor.py` wraps the **advisor tool** (beta header
+`advisor-tool-2026-03-01`, tool type `advisor_20260301`) — a faster executor model consults a
+higher-intelligence advisor server-side within one request. It uses `claude-sonnet-4-6` as the
+executor (NOT `claude-sonnet-4-5`, which is not a valid executor in the compatibility table) and
+`claude-opus-4-8` as the advisor. Key points the helpers encode: top-level `max_tokens` bounds the
+executor only (cap the advisor with `max_tokens` on the tool), advisor tokens live in
+`usage.iterations[]` (not top-level usage), and there's no built-in conversation cap — count
+client-side and `strip_advisor_blocks` before dropping the tool (else 400). Verified live (it is
+not gated on this account). Originally drafted by another model from the docs; reviewed against the
+advisor docs and aligned to repo conventions.
 
 Note on MCP: `mcp/server.py` is a self-contained FastMCP stdio server; `mcp/_mcp_demo.py` spawns
 it as a subprocess, lists its tools, wraps them with `async_mcp_tool`, and drives the SDK tool

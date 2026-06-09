@@ -43,6 +43,7 @@ exercises, and self-check questions:
 [structured outputs](structured_outputs/LEARN.md) ·
 [agents](agents/LEARN.md) ·
 [mcp](mcp/LEARN.md) ·
+[advisor](advisor/LEARN.md) ·
 [video](video/LEARN.md).
 
 Plus repo-wide references: a [**PRACTICE_EXAM**](PRACTICE_EXAM.md) (scenario questions with
@@ -273,4 +274,25 @@ CLI, no Streamlit app.)
 
 ```powershell
 .venv\Scripts\python.exe mcp/run_mcp.py -q "Compare the red fox and gray wolf, with sighting counts."
+```
+
+### Advisor (executor + advisor pairing)
+
+A faster **executor** model consults a higher-intelligence **advisor** model mid-generation: the
+advisor reads the executor's full transcript server-side and returns a plan or course correction
+inside the same request. These examples show the consultation loop, the hard vs. soft cost
+controls (`max_tokens` on the tool vs. the brevity prompt line), the per-iteration billing in
+`usage.iterations`, and the client-side conversation cap. **Beta** — needs the
+`advisor-tool-2026-03-01` header and possibly gated access; not on Bedrock/Vertex/Foundry.
+
+📚 Study sheet: [`advisor/LEARN.md`](advisor/LEARN.md)
+
+| Example | Description |
+| --- | --- |
+| [`advisor/advisor_demo.ipynb`](advisor/advisor_demo.ipynb) | Walk the pattern: quick start, response-block anatomy, capping advisor output (and detecting truncation), the brevity hint, reading `usage.iterations`, multi-turn round-tripping, the conversation cap, and advisor-side caching. |
+| [`advisor/run_advisor.py`](advisor/run_advisor.py) | A command-line runner with advice highlighted and a per-iteration usage table; `--compare` runs the task executor-alone too, `--rates` adds a cost estimate at rates you supply. |
+
+```powershell
+.venv\Scripts\python.exe advisor/run_advisor.py --compare
+.venv\Scripts\python.exe advisor/run_advisor.py -q "Plan a zero-downtime schema migration" --advisor-max-tokens 2048 --brevity
 ```

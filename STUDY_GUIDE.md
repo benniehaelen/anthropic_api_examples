@@ -20,7 +20,7 @@ The **Claude Certified Architect (CCA) — Foundations** is a proctored, 60-ques
 | 2 | **Claude Code Configuration** | 20% | ○ Out of scope — this is about the Claude Code CLI, not the API. See the official courses. |
 | 3 | **Prompt Engineering & Structured Output** | 20% | ● `structured_outputs/` (`messages.parse`, JSON schema, strict tools), `vision/` (multi-step structured-analysis prompt + calibrated confidence), `citations/`. |
 | 4 | **Tool Design & MCP Integration** | 18% | ● `tool_use/` (custom client tools, the agentic loop, tool runner, `tool_choice`), `mcp/` (local MCP server + the tool runner), `code_execution/` (server tool). |
-| 5 | **Context & Reliability** | 15% | ● `prompt_caching/` (measured cost/latency optimization), `documents/` (retrieval to manage context), `citations/` (grounding/trust), `pause_turn` resumption. |
+| 5 | **Context & Reliability** | 15% | ● `prompt_caching/` (measured cost/latency optimization), `advisor/` (executor+advisor cost governance), `documents/` (retrieval to manage context), `citations/` (grounding/trust), `pause_turn` resumption. |
 
 ● strong · ◑ partial · ○ not covered
 

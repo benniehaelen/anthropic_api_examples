@@ -57,11 +57,15 @@ for path in shared:
     try:
         spec = importlib.util.spec_from_file_location(modname, path)
         module = importlib.util.module_from_spec(spec)
+        # Register before exec: dataclasses (and other machinery) look the module up in
+        # sys.modules by name during class creation.
+        sys.modules[modname] = module
         spec.loader.exec_module(module)
         imported += 1
     except Exception as exc:  # noqa: BLE001 — report any import failure
         failures.append(f"import: {os.path.relpath(path, ROOT)}: {type(exc).__name__}: {exc}")
     finally:
+        sys.modules.pop(modname, None)
         if sys.path and sys.path[0] == folder:
             sys.path.pop(0)
 print(f"imported {imported}/{len(shared)} shared modules")
